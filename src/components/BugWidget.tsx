@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import html2canvas from 'html2canvas';
+import * as htmlToImage from 'html-to-image';
 import { Camera, Send, X, Bug, CheckCircle2, Loader2 } from 'lucide-react';
 
 export const BugWidget = () => {
@@ -13,11 +13,12 @@ export const BugWidget = () => {
   const captureScreenshot = async () => {
     setLoading(true);
     try {
-      const canvas = await html2canvas(document.body, {
-        useCORS: true,
-        scale: 0.5, // Reduced scale for faster upload
+      // html-to-image is much better at handling modern CSS like oklch()
+      const dataUrl = await htmlToImage.toJpeg(document.body, {
+        quality: 0.7,
+        pixelRatio: 0.5, // Reduced scale for faster upload
       });
-      setScreenshot(canvas.toDataURL('image/jpeg', 0.7));
+      setScreenshot(dataUrl);
     } catch (err) {
       console.error('Failed to capture screenshot', err);
     } finally {
