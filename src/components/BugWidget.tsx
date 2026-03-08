@@ -73,7 +73,7 @@ export const BugWidget = () => {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-zinc-200 overflow-hidden z-[9999] animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100%-2rem)] sm:w-96 bg-white rounded-2xl shadow-2xl border border-zinc-200 overflow-hidden z-[9999] animate-in fade-in slide-in-from-bottom-4 duration-300">
       <div className="p-4 bg-indigo-600 text-white flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bug size={18} />
