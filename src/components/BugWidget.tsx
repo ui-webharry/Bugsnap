@@ -31,11 +31,21 @@ export const BugWidget = () => {
     setLoading(true);
     
     try {
-      // Use the absolute URL of the app for API calls so it works when embedded
-      const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-      const apiUrl = window.location.origin.includes('localhost') 
-        ? '/api/reports' 
-        : `${baseUrl}/api/reports`;
+      // Detect the script's origin to know where to send the report
+      // This allows the widget to work on any domain without manual configuration
+      let baseUrl = import.meta.env.VITE_APP_URL;
+      
+      if (!baseUrl) {
+        const script = document.querySelector('script[src*="widget.js"]') as HTMLScriptElement;
+        if (script) {
+          baseUrl = new URL(script.src).origin;
+        } else {
+          baseUrl = window.location.origin;
+        }
+      }
+
+      const apiUrl = `${baseUrl}/api/reports`;
+      console.log('Submitting report to:', apiUrl);
 
       const response = await fetch(apiUrl, {
         method: 'POST',

@@ -39,6 +39,13 @@ async function startServer() {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
+  // Serve widget.js in dev mode by redirecting to the vite entry point
+  if (process.env.NODE_ENV !== "production") {
+    app.get("/widget.js", (req, res) => {
+      res.redirect("/src/widget-entry.tsx");
+    });
+  }
+
   app.post("/api/reports", (req, res) => {
     const { title, description, screenshot, url, userAgent } = req.body;
     const stmt = db.prepare(
