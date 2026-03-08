@@ -37,10 +37,14 @@ export default function Dashboard() {
     if (!silent) setIsRefreshing(true);
     try {
       const res = await fetch('/api/reports');
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Server returned ${res.status}: ${text.slice(0, 100)}`);
+      }
       const data = await res.json();
       setReports(data);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to fetch reports:', err);
     } finally {
       setLoading(false);
       setIsRefreshing(false);
@@ -162,7 +166,7 @@ export default function Dashboard() {
             <div className="bg-zinc-50 p-3 rounded-lg border border-zinc-100">
               <p className="text-[10px] text-zinc-500 mb-2 leading-relaxed">Add this script to your website's <code>&lt;head&gt;</code>:</p>
               <pre className="text-[9px] bg-zinc-900 text-zinc-300 p-2 rounded overflow-x-auto">
-                {`<script src="${process.env.APP_URL}/widget.js"></script>`}
+                {`<script src="${import.meta.env.VITE_APP_URL || window.location.origin}/widget.js"></script>`}
               </pre>
             </div>
           </div>

@@ -32,9 +32,10 @@ export const BugWidget = () => {
     
     try {
       // Use the absolute URL of the app for API calls so it works when embedded
+      const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
       const apiUrl = window.location.origin.includes('localhost') 
         ? '/api/reports' 
-        : `${process.env.APP_URL}/api/reports`;
+        : `${baseUrl}/api/reports`;
 
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -48,14 +49,17 @@ export const BugWidget = () => {
         }),
       });
 
-      if (response.ok) {
-        setStep('success');
-        setTitle('');
-        setDescription('');
-        setScreenshot(null);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Server error: ${response.status} ${text.slice(0, 50)}`);
       }
+
+      setStep('success');
+      setTitle('');
+      setDescription('');
+      setScreenshot(null);
     } catch (err) {
-      console.error('Failed to submit bug report', err);
+      console.error('Failed to submit bug report:', err);
     } finally {
       setLoading(false);
     }

@@ -28,7 +28,17 @@ async function startServer() {
   app.use(cors()); // Enable CORS for all routes
   app.use(express.json({ limit: '10mb' }));
 
+  // Logging middleware
+  app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+  });
+
   // API Routes
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
   app.post("/api/reports", (req, res) => {
     const { title, description, screenshot, url, userAgent } = req.body;
     const stmt = db.prepare(
