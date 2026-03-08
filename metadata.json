@@ -1,0 +1,5 @@
+{
+  "name": "BugSnap",
+  "description": "A lightweight bug reporting SaaS that allows developers to collect visual feedback and bug reports from their users with automatic screenshots.",
+  "requestFramePermissions": []
+}
